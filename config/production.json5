@@ -1,0 +1,20 @@
+{
+  sqliteDbPath: "./db/dev-db.sqlite",
+  // sqliteDbPath: "./db/perf.sqlite",
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.3', // most common - https://www.useragents.me/
+  minValidTextLenght: 1,
+  discordNotificationEnabled: false,
+  discordUrl: "https://discordapp.com/api/webhooks/<a-key>", // fill
+  newHtmlTextEqualsIfHasOnlyDeletions: true,
+  cronDesc: "Every 5 minute(s) starting from 03 second",
+  cronSchedule: "03 02/5 * * * *",
+  serverPort: 2333,
+  login: "root",
+  pwd: "root",
+  errorLogPath: "./ruda-err.log",
+  modules: {
+    my_mod: {
+      param1: 123
+    }
+  }
+}

@@ -1,0 +1,41 @@
+body, section {
+ padding-top: 0;
+}
+
+#urlset-tab, #urldata-tab{
+  padding: 0 0.5em;
+}
+
+.crudButtons {
+    padding: inherit;
+    display: inline;
+    margin-bottom: 10px;
+}
+.infoDiv {
+  position: absolute;
+  padding: 5px;
+  width: min-content;
+  right: 10px;
+}
+.catalogGrid {
+    min-height: 300px;
+    /*max-width: 1024px;*/
+    border: solid black 1px;
+}
+#gridNavigator {
+    padding: 10px;
+}
+.catalogPager {
+  padding: 5px;
+  height: 20px;
+  margin-bottom: 15px;
+  float: right;
+}
+
+.helpTitle {
+    font-weight: 900;
+    font-size: larger;
+}
+.page-data {
+  padding-top: 15px;
+}

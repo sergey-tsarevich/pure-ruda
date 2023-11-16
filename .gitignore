@@ -1,0 +1,12 @@
+.vscode
+node_modules
+public/bower_components
+mochawesome-report
+.nyc_output
+coverage
+dist
+test/test.db
+test/test.db-shm
+test/test.db-wal
+SlickGrid
+# ruda-err.log

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Difference comparasion</title>
+    <link href="/../lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <script src="/../lib/diff_match_patch_CUST.js"></script>
+    <script src="/../lib/sanitize-html.js"></script>
+    <style>
+        body td {
+            padding: 5px;
+        }
+        body table {
+            margin: 15px;
+        }
+        #outputdiv {
+            width: 50%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: double;
+            padding: 15px;
+        }
+    </style>
+</head>
+<BODY>
+<H3>Difference between selected url data</H3>
+<P><del style="background:#ffe6e6;">Crossed out (red)</del> - missed.
+    <ins style="background:#e6ffe6;">Underlined (green)</ins>- added.</P>
+
+<H3>Result: <span id="output-eq"></span></H3>
+<DIV ID="outputdiv"></DIV>
+
+<FORM action="#" onsubmit="return false">
+    <TABLE WIDTH="99%">
+      <TR>
+        <TD WIDTH="50%">
+          <H3>Selected version:</H3>
+          <TEXTAREA ID="text1" STYLE="width: 100%" ROWS=10 ></TEXTAREA>
+        </TD>
+        <TD WIDTH="50%">
+          <H3>Next version:</H3>
+          <TEXTAREA ID="text2" STYLE="width: 100%" ROWS=10 ></TEXTAREA>
+        </TD>
+      </TR>
+    </TABLE>
+    <P>
+        <!-- #Diff timeout:
+        If the mapping phase of the diff computation takes longer than this, then the computation
+        is truncated and the best solution to date is returned. While guaranteed to be correct,
+        it may not be optimal. A timeout of '0' allows for unlimited computation.In seconds.-->
+        <INPUT TYPE="hidden" SIZE=3 MAXLENGTH=5 VALUE="1" ID="timeout">
+    </P>
+
+    <!--#Post-diff cleanup: -->
+    <DL style="display: none;">
+        <DT><INPUT TYPE="radio" NAME="cleanup" ID="semantic" CHECKED>
+            <LABEL FOR="semantic">Semantic Cleanup</LABEL></DT>
+        <DD>Increase human readability by factoring out commonalities which are likely to be
+            coincidental.
+        </DD>
+        <DT><INPUT TYPE="radio" NAME="cleanup" ID="efficiency" >
+            <LABEL FOR="efficiency">Efficiency Cleanup</LABEL>,
+            edit cost: <INPUT TYPE="text" SIZE=3 MAXLENGTH=5 VALUE="4" ID="editcost">
+        <DD>Increase computational efficiency by factoring out short commonalities which are
+            not worth the overhead. The larger the edit cost, the more agressive the cleanup.
+        </DD>
+        <DT><INPUT TYPE="radio" NAME="cleanup" ID="raw">
+            <LABEL FOR="raw">No Cleanup</LABEL></DT>
+        <DD>Raw output.</DD>
+    </DL>
+
+    <!--<P><INPUT TYPE="button" onClick="launch()" VALUE="Compute Diff"></P>-->
+</FORM>
+<SCRIPT TYPE="text/javascript" LANGUAGE="JavaScript">
+    var dmp = new diff_match_patch();
+
+    function diff() {
+        const content1 = cleanupContent(window.content1)
+        const content2 = cleanupContent(window.content2)
+        document.getElementById('text1').value = content1;
+        document.getElementById('text2').value = content2;
+        dmp.Diff_Timeout = parseFloat(document.getElementById('timeout').value);
+        dmp.Diff_EditCost = parseFloat(document.getElementById('editcost').value);
+
+        var ms_start = (new Date()).getTime();
+        var d = dmp.diff_main(content1, content2);
+        var ms_end = (new Date()).getTime();
+
+        if (document.getElementById('semantic').checked) {
+            dmp.diff_cleanupSemantic(d);
+        }
+        if (document.getElementById('efficiency').checked) {
+            dmp.diff_cleanupEfficiency(d);
+        }
+        document.getElementById('output-eq').innerHTML = (d.length === 1 ? '<b>Content are equal.</b>' : '')
+        var ds = dmp.diff_prettyHtml(d);
+        document.getElementById('outputdiv').innerHTML = ds;
+//            + '<BR>Time: ' + (ms_end - ms_start) / 1000 + 's';
+    }
+
+    function cleanupContent(html){
+      return sanitizeHtml(html, {
+      allowedTags: ['img'],
+      allowedAttributes: { img: ['src'] }
+    }).trim().replace(/[\t]/g, '')
+      .replace(/[\s]{3,}/g, '\r\n\r\n')
+    }
+</SCRIPT>
+</body>
+</html>

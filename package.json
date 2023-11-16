@@ -1,0 +1,61 @@
+{
+  "name": "web-ruda",
+  "version": "0.0.1-2022-09-01",
+  "description": "Service to get neccessary information from urls.",
+  "main": "js/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "PINO_LOG_LEVEL=debug node js/server.js",
+    "copy-static-assets": "mkdir dist; cp -R js dist/js; cp -R views dist/views/;",
+    "build": "npm run clean && npm run test && npm run copy-static-assets",
+    "test": "NODE_ENV=test mocha 'test/**/*.spec.js' --timeout=10000 --exit",
+    "test_std": "standard js/ && mocha $(find test -name '*.spec.js') --timeout=10000 --exit",
+    "integration-test": "mocha 'test/**/*.integr.js' --timeout=10000 --exit",
+    "serve-debug": "nodemon --inspect js/server.js",
+    "clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "keywords": [
+    "web scrapper",
+    "aggregator"
+  ],
+  "author": "tss",
+  "license": "ISC",
+  "dependencies": {
+    "async": "3.2.4",
+    "axios": "1.5.1",
+    "axios-retry": "3.8.0",
+    "better-sqlite3": "8.7.0",
+    "body-parser": "1.20.2",
+    "chai": "^4.3.6",
+    "cheerio": "1.0.0-rc.12",
+    "cheerio-advanced-selectors": "^2.0.1",
+    "chrono-node": "^2.7.0",
+    "client-sessions": "0.8.0",
+    "config": "3.3.9",
+    "cron": "3.1.0",
+    "diff-match-patch": "1.0.5",
+    "ejs": "^3.1.9",
+    "errorhandler": "1.5.1",
+    "express": "^4.18.2",
+    "iconv-lite": "0.6.3",
+    "moment": "2.29.4",
+    "node-fetch": "3.3.2",
+    "pino": "8.16.0",
+    "pino-pretty": "10.2.3",
+    "reflect-metadata": "^0.1.13",
+    "sanitize-html": "^2.11.0",
+    "typeorm": "^0.3.17"
+  },
+  "devDependencies": {
+    "fs": "0.0.2",
+    "mocha": "10.1.0",
+    "nock": "^13.2.9",
+    "requirejs": "^2.1.22",
+    "sqlite3": "^5.1.6",
+    "standard": "^17.1.0"
+  }
+}

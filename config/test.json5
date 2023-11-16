@@ -1,0 +1,6 @@
+
+{
+    sqliteDbPath: './test/test.db',
+
+}
+  

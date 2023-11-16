@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Web urls monitor with rules and history.">
+    <title>Control panel</title>
+    <link rel="icon" href="images/open_book.png"/>
+    <link rel="stylesheet" href="css/main.css" type="text/css"/>
+    <link rel="stylesheet" href="css/slick-custom-theme.css" type="text/css"/>
+
+    <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.structure.min.css" type="text/css"/>
+    <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.theme.min.css" type="text/css"/>
+    <link rel="stylesheet" href="lib/slick-grid/slick.grid.min.css" type="text/css"/>
+    <link rel="stylesheet" href="lib/select2.min.css" type="text/css"/>
+</head>
+<body>
+<div class="infoDiv">
+    <span class="helpTitle" title="
+                • Edit cell (left click on cell, Esc - end editing)
+                • Multiple column sorting (sort one column, press Ctrl and sort other columns)
+                • Choose columns that show (right click on headers and select columns to show)
+                • Selecting multiple columns (Hold Ctrl and\or Shift and select columns)
+                • Move columns positions (hold left click on column and drag it)">
+        <a href="#">?</a>
+    </span>
+    <a href="/logout" class="logout">logout</a>
+    <div id="infoDiv"></div>
+</div>
+<div class="container">
+    <section>
+        <div id="tabs">
+            <ul>
+                <li><a href="#urldata-tab">UrlData | Info</a></li>
+                <li><a href="#urlset-tab">UrlSets | Config</a></li>
+            </ul>
+            <div id="gridNavigator">
+                <label for="txtSearch5">Filter:</label>
+                <input type=text id="txtSearch5" style="width:250px;" value=""/>
+
+                <div class="crudButtons">
+                    <button onclick="currentGrid.addItem();">Add</button>
+                    <button onclick="currentGrid.delSelectedItem();">Delete selected rows</button>
+                    <button onClick="requestRaspParse();">Request selected rows</button>
+                    <button onClick="updateAllActiveUrlSets();">Request all rows</button>
+                </div>
+            </div>
+
+            <div id="urlset-tab">
+                <div id="urlsetGrid" class="catalogGrid"></div>
+                <div id="urlsetPager" class="catalogPager"></div>
+                <div class="page-data">
+                  <form class="form-horizontal" id="urlset-form">
+                    <div class="form-group">
+                      <label for="conf" class="col-sm-1 control-label">conf</label>
+                      <div class="col-sm-3">
+                        <input type="text" id="conf" name="conf" class="form-control form-input-conf" />
+                      </div>
+                      <label for="type" class="col-sm-2 control-label">Type</label>
+                      <div class="col-sm-2">
+                        <select name="type" id="type" class="form-control form-input-type">
+                          <option value="html">Html</option>
+                          <option value="img">Image</option>
+                        </select>
+                      </div>
+                      <label for="activationrule" class="col-sm-2 control-label">Rule</label>
+                      <div class="col-sm-4">
+                        <input type="text" name="activationrule" class="form-control form-input-activationrule" id="activationrule" placeholder="content.includes('123')">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="selectors" class="col-sm-2 control-label" title="like jQuery selector - go to link">
+                        <a href="https://github.com/cheeriojs/cheerio#selectors" target="_blank">selectors</a></label>
+                      <div class="col-sm-4">
+                        <input type="text" name="selectors" class="form-control form-input-selectors" id="selectors" placeholder=".entry-content">
+                      </div>
+                      <label for="exclideselectors" class="col-sm-2 control-label" title="like jQuery selector - go to link">
+                        <a href="https://github.com/cheeriojs/cheerio#selectors" target="_blank">exclideselectors</a></label>
+                      <div class="col-sm-4">
+                        <input type="text" name="exclideselectors" class="form-control form-input-exclideselectors" id="exclideselectors" placeholder="h2,h5">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="replacefrom" class="col-sm-2 control-label" title="Replace from, comma-separated">replacefrom</label>
+                      <div class="col-sm-4">
+                        <input type="text" name="replacefrom" class="form-control form-input-replacefrom" id="replacefrom">
+                      </div>
+                      <label for="replaceto" class="col-sm-2 control-label" title="Replace to, comma-separated">replaceto</label>
+                      <div class="col-sm-4">
+                        <input type="text" name="replaceto" class="form-control form-input-replaceto" id="replaceto" placeholder=",">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="keeptags" class="col-sm-4 control-label" title="Tags that will be left, comma-separated">keeptags</label>
+                      <div class="col-sm-8">
+                        <input type="text" name="keeptags" class="form-control form-input-keeptags" id="keeptags" value="table,tr,td,div,p,b,strong,br">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-offset-4 col-sm-8">
+                        <span class="btn btn-default" onClick="currentGrid.updateItemFormInputs()">Update</span>
+                        <span class="btn btn-default" onClick="checkRaspPars()">Check</span>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+            </div>
+            <div id="urldata-tab">
+                <div id="urldataGrid" class="catalogGrid"></div>
+                <div id="urldataPager" class="catalogPager"></div>
+                <div class="page-data">
+                  <form class="form-horizontal" id="urldata-form">
+                  <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                      <span class="btn btn-default" onClick="diffSelectedOrPrevRows()">Compare</span>
+                    </div>
+                  </div>
+                  </form>
+                </div>
+            </div>
+            <div class="echeck-data">
+              <div id="summernote"></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="lib/jquery-3.7.0.min.js"></script>
+<link href="lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+<script src="lib/bootstrap/bootstrap.min.js" async></script>
+
+<!-- include summernote css/js-->
+<link href="lib/summernote.min.css" rel="stylesheet">
+<script src="lib/summernote.min.js"></script>
+
+<script src="lib/jquery-ui/jquery-ui.min.js"></script>
+
+<script src="lib/Sortable.min.js"></script>
+
+<script src="lib/slick-grid/slick.core.min.js"></script>
+<script src="lib/slick-grid/slick.interactions.min.js"></script>
+<script src="lib/slick-grid/plugins/slick.checkboxselectcolumn.min.js"></script>
+<script src="lib/slick-grid/plugins/slick.rowselectionmodel.min.js"></script>
+<script src="lib/slick-grid/slick.dataview.min.js"></script>
+<script src="lib/slick-grid/slick.editors.min.js"></script>
+<script src="lib/slick-grid/slick.grid.min.js"></script>
+<script src="lib/select2.min.js" async></script>
+<script src="lib/sanitize-html.js"></script>
+
+<!--  ==App JS  -->
+<script src="js/entity/Urlset-fields.js"></script>
+<script src="js/entity/Urldata-fields.js"></script>
+
+<script src="js/domain/grid_setup.js"></script>
+<script src="js/domain/catalog_editors.js"></script>
+<script src="js/domain/domains_init.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('#summernote').summernote({
+      height: 300,
+      placeholder: 'Site data',
+      minHeight: null,             // set minimum height of editor
+      maxHeight: null             // set maximum height of editor
+    });
+  });
+
+  function checkRaspPars () {
+    let urlSet = currentGrid.getSelectedItems()[0];
+    const formColumns = URLSET_CONF.catalogColumns.filter(function (col) { return col && col.editor && col.formInput })
+    formColumns.forEach(function (column) {
+      urlSet[column.field] = $('#' + URLSET_CONF.name + '-form' + ' .form-input-' + column.field).val()
+    })
+    delete urlSet[URLSET.lastdata] // to reduce traffic
+    $.ajax({
+      url: "/check-siteparse",
+      type: "post",
+      data: urlSet,
+      success: function (res) {
+        if (res.value) {
+          $('#summernote').summernote('code', res.value);
+        } else {
+          if (res.error) {
+            $('#summernote').summernote('code', '<b style="color:red;">' + res.error + '</b>');
+          } else {
+            $('#summernote').summernote('code', '<b style="color:red;">No text! Please, check Url settings.</b>');
+          }
+        }
+
+        return false;
+      },
+      error: handleBackendErrors
+    });
+  }
+
+  function diffSelectedOrPrevRows () {
+    let urlSets = currentGrid.getSelectedItems();
+    if (urlSets.length == 0) {
+      return alert('Please select at least one row')
+    }
+
+    let selItem1 = urlSets[0]
+    let selItem2 = urlSets[1]
+    if (urlSets.length == 1) {
+      // load from previous change
+      $.getJSON(URLDATA_CONF.ITEM_URL + 'prev', {id: selItem1.id, urlsetid: selItem1.urlsetid},
+        function (respData) {
+          if (!respData[URLDATA.content]) {
+            return alert('Selected UrlSetId has only one row')
+          }
+          openPopupDiffWindow(selItem1[URLDATA.content], respData[URLDATA.content])
+        }
+      ).fail(function (err) {
+        showInfo('Server error: ' + err, true)
+      })
+    } else if (selItem2[URLDATA.content] == undefined){
+      // load the content
+      $.getJSON(URLDATA_CONF.ITEM_URL + selItem2.id, {},
+        function (respData) {
+          openPopupDiffWindow(selItem1[URLDATA.content], respData[URLDATA.content])
+        }
+      ).fail(function (err) {
+        showInfo('Server error: ' + err, true)
+      })
+    } else {
+      openPopupDiffWindow(selItem1[URLDATA.content], selItem2[URLDATA.content])
+    }
+    function openPopupDiffWindow(content1, content2) {
+      let diffWindow = window.open('ruda/diff', '_blank', 'popup=true, width=700')
+      diffWindow.content1 = content2 // latest data first
+      diffWindow.content2 = content1
+      diffWindow.addEventListener('load', function () {diffWindow.diff()}, false)
+    }
+  }
+
+  function handleBackendErrors (err) {
+      if (err.status < 500) {
+        showInfo('Client error: ' + err?.responseJSON?.error, true)
+      } else {
+        console.info(err)
+        showInfo('Server error: ' + err?.responseText, true)
+      }
+    }
+
+  function requestRaspParse () {
+    let urlSet = currentGrid.getSelectedItems()[0];
+    $.ajax({
+      url: "/force-siteparse",
+      type: 'POST',
+      data: urlSet,
+      success: function (res) {
+        if (res.error) {
+          $('#summernote').summernote('code', '<b style="color:red;">' + res.error + '</b>');
+        } else {
+          $('#summernote').summernote('code', res.value);
+        }
+
+        return false;
+      },
+      error: handleBackendErrors
+    });
+  }
+
+  function updateAllActiveUrlSets () {
+    $.get("/update-all-active", {},
+      function (res) {
+        $('#summernote').summernote('code', res.value);
+        return false;
+      },
+    ).fail(function (err) {
+      handleBackendErrors(err)
+    });
+  }
+
+</script>
+</body>
+</html>
