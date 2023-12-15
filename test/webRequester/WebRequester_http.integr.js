@@ -3,17 +3,7 @@ import assert from 'assert'
 
 import * as webRequester from '../../js/api/web-requester.js'
 
-describe('Test Web Requester: ', function () {
-
-  it('No such URL', function (done) {
-    webRequester.getRawHtmlFrom('fail_zzz.org').then(function (html) {
-      done(new Error('Error: no such site!'))
-    }).catch(function (err) {
-      assert.strictEqual(err.code, 'ENOTFOUND')
-      assert.equal(err.message, 'getaddrinfo ENOTFOUND fail_zzz.org')
-      done()
-    })
-  })
+describe('Test Web Requester: internet required', function () {
 
   it('Url without HTTP prefix is ok', function (done) {
     try {

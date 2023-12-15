@@ -31,14 +31,10 @@ export async function runRequester (allPeriods) {
   } else {
     logger.info('Found %d sitePrefs (site prefs). Start parsing...', rows.length)
     rows.forEach(function (siteParsePref) {
-      // todo: review d parameter
-      parseSiteAndSave(siteParsePref).then(function (d) {
-        logger.info('OK parsing data for ' + siteParsePref.url)
+      parseSiteAndSave(siteParsePref).then(function (msg) {
+        logger.info(`OK parsing data for ${siteParsePref.url} : ${msg}`)
       }).catch(function (err) {
-        if (err && siteParsePref.status !== 0) {
-          siteprefService.updateStatus(siteParsePref, 0)
-          logger.error(err, "ERROR: Can't parse site " + siteParsePref.url + ' : ' + err.message)
-        }
+        logger.error(err, "ERROR: Can't parse site " + siteParsePref.url + ' : ' + err.message)
       })
     })
   }
@@ -59,7 +55,7 @@ export function parseSiteAndSave (siteParsePref) {
           siteprefService.updateLastCheck(siteParsePref)
           logger.warn(`HTTP status code is still BAD_CONTENT(too small response text) for ${siteParsePref.url}`)
         }
-        reject(undefined) // error already handled
+        reject('Too small response text')
         return
       }
       // get last pars to compare if the same
@@ -76,7 +72,6 @@ export function parseSiteAndSave (siteParsePref) {
         resolve('SiteData activation rule has been failed.')
         return
       }
-
 
       const currUnixTimeInSec = Date.now()
       const siteData = {
@@ -117,10 +112,11 @@ export function parseSiteAndSave (siteParsePref) {
         }
         logger.warn('Zero status(not available?) for (' + siteParsePref.url + ') : ' + err.message)
       }
-      reject(undefined) // error already handled
+      reject('Error handled: ' + err.message)
     })
   })
 }
+
 export async function parseSite (siteParsePref) {
   return new Promise(function (resolve, reject) {
     webRequester.getRawHtmlFrom(siteParsePref.url).then(async function (rawHtml) {

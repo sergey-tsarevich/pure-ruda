@@ -124,8 +124,8 @@ export async function getPrevUrlData (req, res) {
 
   const prevContent = await AppDataSource.getRepository(Urldata).createQueryBuilder('u')
     .select('u.content as content')
-    .where('u.urlsetid = :urlsetid', { urlsetid: urlsetid })
-    .andWhere('u.id != :id', { id: id })
+    .where('u.urlsetid = :urlsetid', { urlsetid })
+    .andWhere('u.id != :id', { id })
     .orderBy('u.id', 'DESC')
     .limit(1).getRawOne()
 
