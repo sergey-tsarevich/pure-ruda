@@ -58,6 +58,15 @@ describe('Check isTextEqual in HTML mode: ', function () {
     assert(result === true)
   })
 
+  it('Text in html is the same with new lines', function () {
+    const oldHtml = 'Hello!'
+    const newHtml = 'Hello!\n\r'
+
+    const result = htmlParser.isTextEqual(oldHtml, newHtml, 'html', false)
+
+    assert(result === true)
+  })
+
   it('Text in html is the same, extra html 2', function () {
     const oldHtml = `
          Расписание  Богослужений

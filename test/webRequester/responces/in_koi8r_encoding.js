@@ -1,4 +1,5 @@
-export let responseInKoi8r = { data: `
+export const responseInKoi8r = {
+  data: `
 
 
 <html>
@@ -152,4 +153,4 @@ border="0" class="namo-button2" alt="Контакты" align="texttop"></a></fon
 
 
 `
-};
+}

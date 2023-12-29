@@ -5,7 +5,6 @@ import nock from 'nock'
 import * as webRequester from '../../js/api/web-requester.js'
 
 describe('Test Web Requester: with local mock', function () {
-
   it('No such URL', function (done) {
     webRequester.getRawHtmlFrom('fail_zzz.org').then(function (html) {
       done(new Error('Error: no such site!'))
@@ -19,8 +18,8 @@ describe('Test Web Requester: with local mock', function () {
   it('Request http is ok', function (done) {
     // Given
     nock('http://test.org')
-    .get('/')
-    .reply(200, 'Hello World!', { 'Content-Type': 'text/html' })
+      .get('/')
+      .reply(200, 'Hello World!', { 'Content-Type': 'text/html' })
 
     try {
       // When
@@ -30,12 +29,11 @@ describe('Test Web Requester: with local mock', function () {
 
         done()
       }).catch(function (err) {
-        console.error("Ups!", err)
+        console.error('Ups!', err)
         done(new Error('Err: ' + err))
       })
     } catch (assertioErr) {
       done(assertioErr)
     }
   })
-
 })

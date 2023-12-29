@@ -8,7 +8,7 @@ const logger = pino({
   level: process.env.PINO_LOG_LEVEL || 'info',
   transport: {
     targets: [
-      { target: 'pino-pretty' },
+      { target: 'pino-pretty', options: { translateTime: 'yyyy-mm-dd HH:MM:ss.l' } },
       { level: 'error', target: 'pino/file', options: { destination: conf.get('errorLogPath'), append: true } }
       // { level: 'error', target: './my-transport.js', options }
     ]

@@ -1,4 +1,5 @@
-export let responseIn1251 = { data: `
+export const responseIn1251 = {
+  data: `
 <html><!-- #BeginTemplate "in.dwt" -->
 <head><meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
 	<title>Храм в честь преп.Сергия Радонежского</title>
@@ -282,4 +283,4 @@ export let responseIn1251 = { data: `
 </body>
 <!-- #EndTemplate --></html>\` };
 `
-};
+}

@@ -4,7 +4,6 @@ import assert from 'assert'
 import * as webRequester from '../../js/api/web-requester.js'
 
 describe('Test Web Requester: internet required', function () {
-
   it('Url without HTTP prefix is ok', function (done) {
     try {
       webRequester.getRawHtmlFrom('1.1.1.1').then(function (html) {
@@ -32,7 +31,7 @@ describe('Test Web Requester: internet required', function () {
     })
   })
 
-  it('Encoding win1251 is OK', function (done) {
+  it.skip('Encoding win1251 is OK - todo: ENOTFOUND sergiyhram.com', function (done) {
     webRequester.getRawHtmlFrom('http://sergiyhram.com/3.htm').then(function (html) {
       assert(html.indexOf('<title>Расписание богослужений</title>') > 0)
 

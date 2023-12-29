@@ -6,13 +6,12 @@ import { Raw } from 'typeorm'
 import { AppDataSource } from '../data-source.js'
 import { Urldata } from '../entity/Urldata-model.js'
 import { Urlset } from '../entity/Urlset-model.js'
+import { handleModules } from './modules-handler.js'
 
 import config from 'config'
 import logger from './util/logger.js'
 import * as siteprefService from './service/sitepref-service.js'
 import { TOO_SMALL_RESPONSE_TEXT_STATUS, ACTIVATION_RULE_FAILED_STATUS } from './util/consts.js'
-
-let modulesCache
 
 export async function runRequester (allPeriods) {
   logger.info('Started sqlite3 requester to get shcedule...')
@@ -32,7 +31,7 @@ export async function runRequester (allPeriods) {
     logger.info('Found %d sitePrefs (site prefs). Start parsing...', rows.length)
     rows.forEach(function (siteParsePref) {
       parseSiteAndSave(siteParsePref).then(function (msg) {
-        logger.info(`OK parsing data for ${siteParsePref.url} : ${msg}`)
+        logger.info(`OK parsing data for ${siteParsePref.url}.`)
       }).catch(function (err) {
         logger.error(err, "ERROR: Can't parse site " + siteParsePref.url + ' : ' + err.message)
       })
@@ -127,32 +126,4 @@ export async function parseSite (siteParsePref) {
       reject(err.message)
     })
   })
-}
-
-async function handleModules (content, source, urlSetConf, urlDataId) {
-  if (modulesCache) {
-    logger.info('Load modules cache')
-    for (const mod in modulesCache) {
-      try {
-        const module = modulesCache[mod]
-        module.handle(content, source, urlSetConf, urlDataId)
-      } catch (error) {
-        logger.error(error, mod + ' handling failed')
-      }
-    }
-  } else {
-    logger.warn('Init modules')
-    modulesCache = {}
-    for (const mod in config.modules) {
-      logger.info(`Found module: ${mod}`)
-      try {
-        const module = await import('../modules/' + mod + '.js')
-        module.handle(content, source, urlSetConf, urlDataId)
-        modulesCache[mod] = module
-      } catch (error) {
-        logger.error(error, mod + ' handling failed')
-      }
-    }
-    logger.info('Finish modules handling')
-  }
 }
