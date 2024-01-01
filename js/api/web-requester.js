@@ -17,12 +17,16 @@ const HTML_2_ICONV_ENCODINGS = {
 }
 axiosRetry(axios, { retries: 3 })
 
-function addHttpToUrlIfMissed (url) {
-  if (!url.startsWith('http')) {
-    url = 'http://' + url.trim()
-  }
-  return url
+export function isValidUrl (url) {
+  return url.startsWith('http') || url.startsWith('//')
 }
+function addHttpToUrlIfMissed (url) {
+  if (isValidUrl(url)) {
+    return url
+  }
+  return 'http://' + url.trim()
+}
+
 export const getRawHtmlFrom = function (url) {
   return new Promise(function (resolve, reject) {
     url = addHttpToUrlIfMissed(url)

@@ -5,6 +5,8 @@ import cheerioOriginal from 'cheerio'
 import cheerioAdv from 'cheerio-advanced-selectors'
 import sanitizeHtml from 'sanitize-html'
 import { diff_match_patch } from 'diff-match-patch'
+import { isValidUrl } from './web-requester.js'
+
 import urlLib from 'url'
 import axios from 'axios'
 import logger from './util/logger.js'
@@ -68,7 +70,7 @@ export async function correctImgUrls (resultContent, baseUrl, imgAsBase64) {
     const imgUrl = $(elem).attr('src')
     if (imgUrl) {
       let fullImgUrl = imgUrl
-      if (imgUrl.indexOf('http') !== 0 || imgUrl.indexOf('//') !== 0) {
+      if (!isValidUrl(imgUrl)) {
         const urlObj = new urlLib.URL(baseUrl)
         fullImgUrl = urlObj.protocol + '//' + urlObj.host + '/' + imgUrl
         $(elem).attr('src', fullImgUrl)
