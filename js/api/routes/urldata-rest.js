@@ -129,5 +129,5 @@ export async function getPrevUrlData (req, res) {
     .orderBy('u.id', 'DESC')
     .limit(1).getRawOne()
 
-  res.json(prevContent)
+  res.json(prevContent || {})
 }

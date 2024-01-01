@@ -5,7 +5,7 @@ let modulesCache
 
 export async function handleModules (content, source, urlSetConf, urlDataId) {
   if (modulesCache) {
-    logger.info('Load modules cache')
+    logger.debug('Load modules cache')
     for (const mod in modulesCache) {
       try {
         const module = modulesCache[mod]
