@@ -46,12 +46,12 @@ export function parseSiteAndSave (siteParsePref) {
       const resultContent = await htmlParser.extractData(rawHtml, siteParsePref)
       if (!notificator.isTextValid(resultContent, siteParsePref.type)) {
         if (siteParsePref.status !== TOO_SMALL_RESPONSE_TEXT_STATUS) {
-          siteprefService.updateStatus(siteParsePref, TOO_SMALL_RESPONSE_TEXT_STATUS)
+          await siteprefService.updateStatus(siteParsePref, TOO_SMALL_RESPONSE_TEXT_STATUS)
           const errMessage = `HTTP status code was changed from ${siteParsePref.status} to BAD_CONTENT(too small response text)  for ${siteParsePref.url}`
           logger.warn(errMessage)
           notificator.notifyWarning(siteParsePref, true)
         } else {
-          siteprefService.updateLastCheck(siteParsePref)
+          await siteprefService.updateLastCheck(siteParsePref)
           logger.warn(`HTTP status code is still BAD_CONTENT(too small response text) for ${siteParsePref.url}`)
         }
         reject('Too small response text')
@@ -60,14 +60,14 @@ export function parseSiteAndSave (siteParsePref) {
       // get last pars to compare if the same
       if (htmlParser.isTextEqual(siteParsePref.lastdata, resultContent, siteParsePref.type, config.newHtmlTextEqualsIfHasOnlyDeletions)) {
         logger.info('SiteData is the same for (%s). Skip update.', siteParsePref.url)
-        siteprefService.updateStatus(siteParsePref, 200)
+        await siteprefService.updateStatus(siteParsePref, 200)
         resolve('Url content is the same as previous.')
         return
       }
       // apply activation rule
       if (siteprefService.isAcitivationRuleFailed(siteParsePref.lastdata, siteParsePref.activationrule)) {
         logger.info('SiteData activation rule has been failed for (%s). Skip update.', siteParsePref.activationrule)
-        siteprefService.updateStatus(siteParsePref, ACTIVATION_RULE_FAILED_STATUS)
+        await siteprefService.updateStatus(siteParsePref, ACTIVATION_RULE_FAILED_STATUS)
         resolve('SiteData activation rule has been failed.')
         return
       }
@@ -92,22 +92,22 @@ export function parseSiteAndSave (siteParsePref) {
       })
       logger.debug('Data from %s updated successfully.', siteParsePref.url)
       resolve(resultContent)
-    }).catch(function (err) {
+    }).catch(async function (err) {
       const status = err.response ? err.response.status : undefined
       if (status) {
         if (siteParsePref.status !== status) {
           logger.warn(`HTTP status code was changed from ${siteParsePref.status} to ${status} for ${siteParsePref.url}`) // todo:notify warning
-          siteprefService.updateStatus(siteParsePref, status)
+          await siteprefService.updateStatus(siteParsePref, status)
         } else {
-          siteprefService.updateLastCheck(siteParsePref)
+          await siteprefService.updateLastCheck(siteParsePref)
           logger.error(`HTTP status code is still wrong ${status} for ${siteParsePref.url}`)
         }
       } else { // site is not available
         if (siteParsePref.status === 0) {
-          siteprefService.updateLastCheck(siteParsePref)
+          await siteprefService.updateLastCheck(siteParsePref)
           logger.debug(err)
         } else {
-          siteprefService.updateStatus(siteParsePref, 0)
+          await siteprefService.updateStatus(siteParsePref, 0)
         }
         logger.warn('Zero status(not available?) for (' + siteParsePref.url + ') : ' + err.message)
       }
