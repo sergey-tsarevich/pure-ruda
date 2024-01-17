@@ -13,8 +13,6 @@
   pwd: "root",
   errorLogPath: "./ruda-err.log",
   modules: {
-    my_mod: {
-      param1: 123
-    }
+    discord: {}
   }
 }

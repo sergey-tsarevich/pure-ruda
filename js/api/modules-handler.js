@@ -3,13 +3,13 @@ import logger from './util/logger.js'
 
 let modulesCache
 
-export async function handleModules (content, source, urlSetConf, urlDataId) {
+export async function handleModules (content, source, urlSetConf, urlDataId, urlSetName) {
   if (modulesCache) {
     logger.debug('Load modules cache')
     for (const mod in modulesCache) {
       try {
         const module = modulesCache[mod]
-        module.handle(content, source, urlSetConf, urlDataId)
+        module.handle(content, source, urlSetConf, urlDataId, urlSetName)
       } catch (error) {
         logger.error(error, mod + ' handling failed')
       }
@@ -21,7 +21,7 @@ export async function handleModules (content, source, urlSetConf, urlDataId) {
       logger.info(`Found module: ${mod}`)
       try {
         const module = await import(`../modules/${mod}.js`)
-        module.handle(content, source, urlSetConf, urlDataId)
+        module.handle(content, source, urlSetConf, urlDataId, urlSetName)
         modulesCache[mod] = module
       } catch (error) {
         logger.error(error, mod + ' handling failed')

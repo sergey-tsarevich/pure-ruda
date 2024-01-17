@@ -11,7 +11,7 @@ const parsePeriod = {
 const URLSET_CONF = {
   name: 'urlset',
   catalogColumns: [
-    { name: 'Name', field: URLSET.name, editor: UrlNameTextEditor, formatter: (row, cell, value) => { return value }, validator: requiredFieldValidator, sortable: true, width: 120 },
+    { name: 'Name', field: URLSET.name, editor: UrlNameTextEditor, formatter: (row, cell, value) => { return value }, validator: requiredFieldValidator, sortable: true, width: 300 },
     { name: 'Url', field: URLSET.url, editor: Slick.Editors.LongText, formatter: urlFormatter, validator: requiredFieldValidator, sortable: true, width: 250 },
     { name: 'Period', field: URLSET.parseperiod, editor: SelectBoxEditor, formatter: SelectBoxFormatter, dataSource: parsePeriod, defaultValue: 86400000, sortable: true, width: 60 },
     { name: 'LastCheck', field: URLSET.lastcheck, formatter: timeStampFormatter, sortable: true, width: 90 },
@@ -19,13 +19,13 @@ const URLSET_CONF = {
     { name: 'Active', field: URLSET.enabled, editor: Slick.Editors.Checkbox, formatter: booleanFormatter, defaultValue: true, sortable: true, width: 60 },
     { name: 'Status', field: URLSET.status, editor: Slick.Editors.Integer, formatter: urlStatusFormatter, sortable: true, width: 60 },
     { name: 'Img64', field: URLSET.imgasbase64, editor: Slick.Editors.Checkbox, formatter: booleanFormatter, sortable: true, width: 60 },
-    { name: 'ActivationRule', field: URLSET.activationrule, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 60 },
-    { name: 'Conf', field: URLSET.conf, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 60 },
-    { name: 'Type', field: URLSET.type, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 60 },
-    { name: 'Selectors', field: URLSET.selectors, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 150 },
-    { name: 'ExclideSelectors', field: URLSET.exclideselectors, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 60 },
-    { name: 'ReplaceFrom', field: URLSET.replacefrom, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 60 },
-    { name: 'ReplaceTo', field: URLSET.replaceto, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 60 },
+    { name: 'ActivationRule', field: URLSET.activationrule, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 0 },
+    { name: 'Conf', field: URLSET.conf, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 0 },
+    { name: 'Type', field: URLSET.type, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 0 },
+    { name: 'Selectors', field: URLSET.selectors, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 0 },
+    { name: 'ExclideSelectors', field: URLSET.exclideselectors, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 0 },
+    { name: 'ReplaceFrom', field: URLSET.replacefrom, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 0 },
+    { name: 'ReplaceTo', field: URLSET.replaceto, editor: Slick.Editors.Text, formInput: true, sortable: true, width: 0 },
     {
       name: 'KeepTags',
       field: URLSET.keeptags,
@@ -33,7 +33,7 @@ const URLSET_CONF = {
       formInput: true,
       defaultValue: 'a,b,br,div,dl,dt,em,h1,h2,h3,h4,h5,h6,hr,i,img,li,ol,p,span,strong,sub,table,tbody,td,tfoot,th,thead,tr,u,ul',
       sortable: true,
-      width: 160
+      width: 0
     }
   ],
   ITEM_URL: '/ruda/api/urlset/',

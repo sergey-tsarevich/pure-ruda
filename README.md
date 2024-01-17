@@ -58,6 +58,7 @@ To handle new UrlData event you should:
 
 
 ## TODOs:
+https://trello.com/b/GTW6MzD1/ruda
 - siteParse
 - isOnline|hasInternet?
 - err logs to discord!

@@ -94,31 +94,31 @@ export async function correctImgUrls (resultContent, baseUrl, imgAsBase64) {
 
   return $.html()
 }
+
+function clearHtml (html, allowedTags = [], allowedAttributes = []) {
+  return sanitizeHtml(html, {
+    allowedTags,
+    allowedAttributes
+  }).trim().replace(/[\t\s]/g, '')
+}
 /**
  * Check if Html text is differ
  * @param oldHtml - previous html
  * @param newHtml - current html
  * @param sourceType - 'img' or 'html'
- * @param newTextHasOnlyDeletionsMode - if this mode is true then text is also equal if old html contains new html fully
+ * @param newTextHasOnlyDeletionsMode - is this mode is true then text is also equal if old html contains new html fully
+ * @param imgasbase64 - is images content were transformed to base64.
  * @returns {boolean} - true if text is equal
  */
-export function isTextEqual (oldHtml, newHtml, sourceType, newTextHasOnlyDeletionsMode) {
+export function isTextEqual (oldHtml, newHtml, sourceType, newTextHasOnlyDeletionsMode, imgasbase64) {
   if (sourceType !== 'img') {
     if (oldHtml) {
-      oldHtml = sanitizeHtml(oldHtml,
-        {
-          allowedTags: [],
-          allowedAttributes: []
-        }).trim().replace(/[\t\s]/g, '')
+      oldHtml = clearHtml(oldHtml)
     } else {
       oldHtml = ''
     }
     if (newHtml) {
-      newHtml = sanitizeHtml(newHtml,
-        {
-          allowedTags: [],
-          allowedAttributes: []
-        }).trim().replace(/[\t\s]/g, '')
+      newHtml = clearHtml(newHtml)
     } else {
       newHtml = ''
     }
@@ -132,29 +132,17 @@ export function isTextEqual (oldHtml, newHtml, sourceType, newTextHasOnlyDeletio
       })
     }
   } else {
+    const allowedAttributes = imgasbase64 ? [] : { img: ['src'] }
     if (oldHtml) {
-      oldHtml = sanitizeHtml(oldHtml, {
-        allowedTags: ['img'],
-        allowedAttributes: { img: ['src'] }
-      }).trim().replace(/[\t\s]/g, '')
+      oldHtml = clearHtml(oldHtml, ['img'], allowedAttributes)
     }
     if (newHtml) {
-      newHtml = sanitizeHtml(newHtml, {
-        allowedTags: ['img'],
-        allowedAttributes: { img: ['src'] }
-      }).trim().replace(/[\t\s]/g, '')
+      newHtml = clearHtml(newHtml, ['img'], allowedAttributes)
     }
   }
   return (oldHtml === newHtml)
 }
 // sanitizeHtml for diff
-export function clearHtml (html) {
-  return sanitizeHtml(html, {
-    allowedTags: ['img'],
-    allowedAttributes: { img: ['src'] }
-  }).trim().replace(/[\t]/g, '')
-    .replace(/[\s]{3,}/g, '\r\n\r\n')
-}
 export function getOnlyText (html) {
   return sanitizeHtml(html, {
     allowedTags: [],

@@ -58,7 +58,8 @@ export function parseSiteAndSave (siteParsePref) {
         return
       }
       // get last pars to compare if the same
-      if (htmlParser.isTextEqual(siteParsePref.lastdata, resultContent, siteParsePref.type, config.newHtmlTextEqualsIfHasOnlyDeletions)) {
+      if (htmlParser.isTextEqual(siteParsePref.lastdata, resultContent, siteParsePref.type,
+            config.newHtmlTextEqualsIfHasOnlyDeletions, siteParsePref.imgasbase64)) {
         logger.info('SiteData is the same for (%s). Skip update.', siteParsePref.url)
         await siteprefService.updateStatus(siteParsePref, 200)
         resolve('Url content is the same as previous.')
