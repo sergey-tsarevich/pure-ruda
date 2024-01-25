@@ -52,6 +52,7 @@ export const getRawHtmlFrom = function (url) {
         })
         stream.on('error', function (error) {
           logger.error(error, 'HTTP response stream error: ', error.message)
+          reject(error)
         })
       } else {
         const httpError = new Error('Wrong status code: ' + response.status + ' for ' + url)

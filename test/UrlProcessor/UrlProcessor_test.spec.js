@@ -108,7 +108,7 @@ describe('UrlProcessor - parse site and save', function () {
     assert.ok(sitePrefAfter.lastcheck > sitePrefAfter.lastupdate)
   })
 
-  it('When host is unavailable, then status = 0', async () => {
+  it('When host is unavailable, then status = 0 and lastcheck updated', async () => {
     // Arrange
     const rows = await repo.find()
     const sitePref = rows[0]
